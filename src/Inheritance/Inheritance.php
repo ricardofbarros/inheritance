@@ -1,7 +1,7 @@
 <?php
-use \Factory\ClassFactory as ClassFactory;
-use \Exception\NameCollisionException as NameCollisionException;
-use \Exception\ProtectedException as ProtectedException;
+use \Inheritance\Factory\ClassFactory as ClassFactory;
+use \Inheritance\Exception\NameCollisionException as NameCollisionException;
+use \Inheritance\Exception\ProtectedException as ProtectedException;
 
 class Inheritance {
     
