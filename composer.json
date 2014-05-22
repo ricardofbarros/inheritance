@@ -1,0 +1,18 @@
+{
+    "name": "ricardofbarros/inheritance",
+    "description": "Easy Multiple Inheritance for Classes in PHP",
+    "version": "1.0.0",
+    "keywords": ["inherit", "inheritance", "extend", "class", "multiple"],
+    "homepage": "https://github.com/ricardofbarros/inheritance",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ricardo Barros",
+            "email": "ricardofbarros@hotmail.com"
+        }
+    ],    
+    "autoload": {
+        "classmap": ["src/Inheritance.php"]
+    } 
+}
+                                                  
