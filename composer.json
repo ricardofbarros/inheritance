@@ -16,7 +16,7 @@
     },
     "autoload": {
         "classmap": [
-            "src/Inheritance/Inheritance.php"
+            "src/Inheritance.php"
         ],
         "psr-4" : { "Inheritance\\": "src/" }
     } 
