@@ -19,6 +19,6 @@
             "src/Inheritance.php"
         ],
         "psr-4" : { "Inheritance\\": "src/" }
-    } 
+    }  
 }
                                                   
