@@ -43,8 +43,8 @@ class ClassA extends \Inheritance {
 
     public function __construct() {
         parent::__inherit(array(
-            'ClassB', 
-            'ClassC'
+            new ClassB(), 
+            new ClassC()
          ));
     }
     
@@ -77,8 +77,30 @@ echo $class->test();
 
 > **NOTE:** For some more usage examples, see files in `examples` dir
 
+## To construct or not to construct?
+
+You can decide if you want to construct a class or just bypass the '__constructor', it's very simple to do that
+just see the example bellow.
+
+```php
+class ClassA extends \Inheritance {
+
+    public function __construct() {
+        parent::__inherit(array(
+            'ClassB', // This will instance the class bypassing a potential existence of a constructor
+            new ClassC() // This will call __construct() as expected
+         ));
+    }
+    
+    public function test() {
+       return parent::hello().' '.parent::world();
+    }    
+}
+```
+
 ## Features
 
 - Access to protected and public methods
 - Access to protected and public properties
 - Throw exceptions for the use of protected properties and methods in an invalid scope
+- Decide which classes inherited you want to construct and instantiate or instantiate without constructing

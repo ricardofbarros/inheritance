@@ -18,8 +18,8 @@ class ClassA extends \Inheritance{
     
     public function __construct() {
         parent::__inherit(array(
-            'ClassB', 
-            'ClassC'
+            new ClassB(), 
+            new ClassC()
          ));
     }
     
