@@ -1,7 +1,7 @@
-# Inheritance
-____
-
+Inheritance
+===========
 Make multiple inheritances in PHP effortlessly, without alot of fuss and some potential headaches. **It's easy as pie, trust me!**
+
 
 ## Installation
 
