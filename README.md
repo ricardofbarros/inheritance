@@ -39,22 +39,16 @@ Inheritance::registerAutoloader();
 
 ```php
 ## ClassA.php
-class ClassA extends \Inheritance {
-
-    public function __construct() {
-        parent::__inherit(array(
-            new ClassB(), 
-            new ClassC()
-         ));
-    }
-    
+class ClassA extends \Inheritance 
+{
     public function test() {
        return parent::hello().' '.parent::world();
     }    
 }
 
 ## ClassB.php
-class ClassB  {
+class ClassB  
+{
     protected function hello() {
         return 'Hello';
     }
@@ -62,7 +56,8 @@ class ClassB  {
 
 
 ## ClassC.php
-class ClassC {
+class ClassC 
+{
     protected function world() {
         return 'World!';
     }
@@ -70,6 +65,12 @@ class ClassC {
 
 ## somefile.php
 $class = new ClassA();
+
+// Inherit the classes
+$class->__inherit(array(
+    new ClassB(), 
+    new ClassC()
+));
 
 // Output : Hello World!
 echo $class->test();
