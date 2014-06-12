@@ -19,15 +19,15 @@ class ProtectedException extends \Exception
 
     private function format($array) 
     {
-        var_dump($array);
         if($array['type'] == 'method') {
-            return "Call to protected method ".$array['_class']."::".$array['method']."() from context"
-                    . " '' in ".$array['file']." on line ".$array['line'];            
+            return 'Call to protected method '.$array['_class'].'::'.$array['method'].'() '
+                    . 'in '.$array['file'].' on line '.$array['line'];            
         } 
         else if($array['type'] == 'property') {
-            
+            return 'Call to protected property '.$array['_class'].'::'.$array['property'].' '
+                    . 'in '.$array['file'].' on line '.$array['line'];                
         } else {
-            return "Invalid array-object on ProtectedException::_construct()";
+            return 'Invalid array-object on ProtectedException::_construct()';
         }
     }    
 }

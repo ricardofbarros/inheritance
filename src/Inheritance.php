@@ -14,14 +14,37 @@ use \Inheritance\Exception\ProtectedException as ProtectedException;
  */
 class Inheritance 
 {
+    /**
+     * Array with classes methods and properties names
+     * @var Array 
+     */
     private $classes = array();
     
+    /**
+     * Number of classes Inherited
+     * @var int 
+     */
+    private $countClasses;
+    
+    /**
+     * List of all classes methods and properties names, 
+     * used to check name collision
+     * @var Array
+     */
     private $list = array(
         'methods' => array(),
         'properties' => array()
     );
     
-    public function __inherit ($classes) 
+    /**
+     * Function to "inherit" classes, 
+     * Throw the class to factory
+     * and stores the data returned
+     * inside arrays
+     * 
+     * @param string|object $classes
+     */
+    public function inherit ($classes) 
     {
         // Store classes
         foreach($classes as $class) {
@@ -42,6 +65,11 @@ class Inheritance
         }
     }
     
+    /**
+     * Check for name collision if true throws
+     * exception 
+     * @throws NameCollisionException
+     */
     private function checkNameCollision() 
     {
         if( (count(array_unique($this->list['methods']))< count($this->list['methods'])) || 
@@ -50,7 +78,15 @@ class Inheritance
             throw new NameCollisionException();
         }          
     }
- 
+    
+
+    /**
+     * 
+     * @param type $method
+     * @param type $args
+     * @return boolean
+     * @throws ProtectedException
+     */
     public function __call($method, $args) 
     {
         foreach($this->classes as $class) {
@@ -97,25 +133,98 @@ class Inheritance
         return false;
     }
     
-    public function __set($name, $value) 
-    {
-        
+    /**
+     * Check scope of protected properties
+     */
+    private function checkProperty($class, $type, $name, $value = null) {
+        // Trace back and store it
+        $trace = debug_backtrace();
+        $last = $trace[count($trace) - 1];
+        $count = count($trace);
+        $objArray = (array) $last['object'];
+
+        // Try-catch block
+        try{  
+            if(empty($objArray) || $count <= 1) {
+                // Info for exception
+                $last['type'] = 'property';
+                $last['_class'] = $class['name'];
+                $last['property'] = $name;
+
+                // Throw exception
+                throw new ProtectedException($last);
+            }
+            else {
+                $property = new \ReflectionProperty($class['name'], $name);
+                $property->setAccessible(true);
+                if($type === 'get') {
+                    return $property->getValue($class['object']);                      
+                } else {
+                    return $property->setValue($class['object'], $value);     
+                }        
+            }
+        } catch (ProtectedException $e) {
+            echo 'Exception: '.$e->getMessage().PHP_EOL;
+        }               
     }
     
-    public function __get($name) 
+    /**
+     * 
+     * @param string $name
+     * @param string $value
+     */
+    public function __set($name, $value) 
     {
-        
+        foreach($this->classes as $class) {
+            if(in_array($name, $class['properties']['protected'])) {
+                return $this->checkProperty($class, 'set', $name, $value);
+            }
+            else if(in_array($name, $class['properties']['public'])) {
+                $property = new \ReflectionProperty($class['name'], $name);
+                return $property->setValue($class['object'], $value);                   
+            }            
+        }
+        return false;
     }
-
+    
+    
+    /**
+     * 
+     * @param string $name
+     */
+    public function __get($name) 
+    {   
+        foreach($this->classes as $class) {
+            if(in_array($name, $class['properties']['protected'])) {
+                return $this->checkProperty($class, 'get', $name);
+            }
+            else if(in_array($name, $class['properties']['public'])) {
+                $property = new \ReflectionProperty($class['name'], $name);
+                return $property->getValue($class['object']);                   
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Autoloader
+     * @static
+     * @param string $class
+     */
     public static function autoload($class)
     {
         $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
         $baseDir = dirname(__FILE__).DIRECTORY_SEPARATOR;
         if(file_exists($baseDir. $class.'.php')) {
-            require $baseDir. $class.'.php';
+            require_once $baseDir. $class.'.php';
         }    
     }
-
+    
+    /**
+     * Register auto loader, useful when not using 
+     * composer
+     * @static
+     */
     public static function registerAutoloader()
     {
         spl_autoload_register("Inheritance::autoload");
