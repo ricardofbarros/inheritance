@@ -2,6 +2,17 @@ Inheritance
 ===========
 Make multiple inheritances in PHP effortlessly, without alot of fuss and some potential headaches. **It's easy as pie, trust me!**
 
+## How does this work?
+
+Well it's simple, when you extend 'Inheritance' to your main class (child), you will gain a new method '__inherit', this method will accept an 
+array with objects or the name of your classes, see To construct or not to construct for further understanding, next it will store all non-static 
+public and protected methods and properties using Reflection. 
+
+For example, when you call a method it will trigger 'Inheritance' magic method '__call', and if this method exists in any class inherited, it will invoke this
+method.
+
+Inheritances uses the following magic methods '__call', '__set', '__get'
+
 
 ## Installation
 
@@ -39,16 +50,22 @@ Inheritance::registerAutoloader();
 
 ```php
 ## ClassA.php
-class ClassA extends \Inheritance 
-{
+class ClassA extends \Inheritance {
+
+    public function __construct() {
+        parent::__inherit(array(
+            new ClassB(), 
+            new ClassC()
+         ));
+    }
+    
     public function test() {
        return parent::hello().' '.parent::world();
     }    
 }
 
 ## ClassB.php
-class ClassB  
-{
+class ClassB  {
     protected function hello() {
         return 'Hello';
     }
@@ -56,8 +73,7 @@ class ClassB
 
 
 ## ClassC.php
-class ClassC 
-{
+class ClassC {
     protected function world() {
         return 'World!';
     }
@@ -65,12 +81,6 @@ class ClassC
 
 ## somefile.php
 $class = new ClassA();
-
-// Inherit the classes
-$class->__inherit(array(
-    new ClassB(), 
-    new ClassC()
-));
 
 // Output : Hello World!
 echo $class->test();
@@ -104,4 +114,4 @@ class ClassA extends \Inheritance {
 - Access to protected and public methods
 - Access to protected and public properties
 - Throw exceptions for the use of protected properties and methods in an invalid scope
-- Decide which classes inherited you want to construct and instantiate or instantiate without constructing
+- Decide which classes inherited you want to construct or instantiate without constructing
